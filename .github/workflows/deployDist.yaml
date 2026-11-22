@@ -4,8 +4,14 @@ on: [push, workflow_dispatch]
 #     - push
 #     - workflow_dispatch
 jobs:
-    greet:
+    test:
         runs-on: ubuntu-latest
         steps:
-            - name: print message
-              run: echo "Hello, World!"
+            - name: get code
+              run:
+                echo "cloning a repository"
+                echo "${{toJson(github.repository)}}"
+                git clone https://github.com/${{github.repository}}.git
+
+            
+   
