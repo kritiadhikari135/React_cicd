@@ -54,12 +54,22 @@ jobs:
       - name: Build dist folder
         run: npm run build
 
-      - name: Upload dist artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: github-pages
-          path: ./dist
+      - name: Inspect dist          
+        run: |
+          echo "--- symlinks ---"
+          find dist -type l
+          echo "--- hard links ---"
+          find dist -type f -links +1
+          echo "--- size ---"
+          du -sh dist
+          echo "--- top level ---"
+          ls -la dist
 
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./dist
   deploy:
     runs-on: ubuntu-latest
     needs: Build
@@ -83,19 +93,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-      - name: Inspect dist folder
-        run: |
-         echo "Checking dist directory"
-         ls -lah dist
-
-         echo "Checking folder size"
-         du -sh dist
-
-         echo "Checking symbolic links"
-         find dist -type l -ls
-
-         echo "Checking file count"
-         find dist -type f | wc -l
-
-         echo "Checking build output"
-         find dist -maxdepth 2 -type f | head -50
+      
