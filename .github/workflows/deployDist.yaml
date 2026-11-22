@@ -1,8 +1,13 @@
 name: deployDist
-on: [push, workflow_dispatch]
-# on:
-#     - push
-#     - workflow_dispatch
+# on: [push, workflow_dispatch]
+on:
+    push:
+        branches:
+                - main
+        paths-ignore:
+            - 'README.md'
+            - '.github/workflows/'
+    workflow_dispatch:
 jobs:
     test:
         runs-on: ubuntu-latest
@@ -31,7 +36,9 @@ jobs:
               run: npm ci
             - name: Run tests
               run: npm test
-    deploy:
+
+
+    Build:
         runs-on: ubuntu-latest
         needs: test
         steps:
@@ -52,6 +59,23 @@ jobs:
               run: npm ci
             - name: Build dist folder
               run: npm run build
+            - name: upload dist artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: dist
+                path: dist
+                    
+
+
+    deploy:
+        runs-on: ubuntu-latest
+        needs: test
+        steps:
+            - name: download dist artifact
+              uses: actions/download-artifact@v4
+              with:
+                name: dist
+                path: dist
             - name: Deploy
               run: echo "Deployed to server"
 
