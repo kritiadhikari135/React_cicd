@@ -83,3 +83,19 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Inspect dist folder
+        run: |
+         echo "Checking dist directory"
+         ls -lah dist
+
+         echo "Checking folder size"
+         du -sh dist
+
+         echo "Checking symbolic links"
+         find dist -type l -ls
+
+         echo "Checking file count"
+         find dist -type f | wc -l
+
+         echo "Checking build output"
+         find dist -maxdepth 2 -type f | head -50
