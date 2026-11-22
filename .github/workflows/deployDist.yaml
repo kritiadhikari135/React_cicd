@@ -3,10 +3,10 @@ name: deployDist
 on:
     push:
         branches:
-                - main
+            - main
         paths-ignore:
             - 'README.md'
-            - '.github/workflows/'
+            - '.github/workflows/**'
     workflow_dispatch:
 jobs:
     test:
@@ -69,7 +69,7 @@ jobs:
 
     deploy:
         runs-on: ubuntu-latest
-        needs: test
+        needs: Build
         steps:
             - name: download dist artifact
               uses: actions/download-artifact@v4
